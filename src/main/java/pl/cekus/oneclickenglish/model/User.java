@@ -7,8 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +21,15 @@ public class User implements UserDetails {
     @Transient
     private String passwordConfirm;
     private String role;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    private Set<Word> words = new HashSet<>();
 
-    Long getId() {
+    public Long getId() {
         return id;
+    }
+
+    void setId(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -57,6 +66,14 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    public Set<Word> getWords() {
+        return words;
+    }
+
+    void setWords(Set<Word> words) {
+        this.words = words;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(role));
@@ -81,4 +98,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
