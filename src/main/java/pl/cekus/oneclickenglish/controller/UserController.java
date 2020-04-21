@@ -1,12 +1,10 @@
 package pl.cekus.oneclickenglish.controller;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.service.user.UserService;
 
-@RestController
+@Controller
 class UserController {
     private UserService userService;
 
@@ -14,10 +12,20 @@ class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/api/register")
-    public void registerUser(@RequestBody User user) {
+    @GetMapping("/register")
+    public String getRegisterForm(){
+        return "register";
+    }
+
+    @GetMapping("/login")
+    public String getLoginForm() {
+        return "login";
+    }
+
+    @PostMapping("/register")
+    public void register(@RequestBody User user) {
         if (user.getPassword().equals(user.getPasswordConfirm())) {
-            userService.addUser(user.getUsername(), user.getPassword(), user.getPasswordConfirm());
+            userService.createUser(user.getUsername(), user.getPassword(), user.getPasswordConfirm());
         }
     }
 }

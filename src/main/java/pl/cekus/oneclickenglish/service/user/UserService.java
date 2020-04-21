@@ -4,10 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.repository.UserRepository;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,7 +24,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User addUser(String username, String password, String passwordConfirm) {
+    public User createUser(String username, String password, String passwordConfirm) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
@@ -31,9 +35,14 @@ public class UserService {
         return user;
     }
 
+    public Optional<User> getCurrentLoggedInUser() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userRepository.findUserByUsername(userDetails.getUsername());
+    }
+
     @EventListener(ApplicationReadyEvent.class)
     public void addAdminToDb() {
-        User user = addUser("admin", "password", "password");
+        User user = createUser("admin", "password", "password");
         user.setRole(Roles.ADMIN.toString());
     }
 }
