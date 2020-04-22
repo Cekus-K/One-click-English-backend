@@ -13,6 +13,14 @@ public class Definition {
     @JoinColumn(name = "word_id")
     private Word word;
 
+    public Definition() {
+    }
+
+    public Definition(String description, Word word) {
+        this.description = description;
+        this.word = word;
+    }
+
     public Long getId() {
         return id;
     }

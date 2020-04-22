@@ -10,8 +10,8 @@ import pl.cekus.oneclickenglish.repository.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
-    private UserRepository userRepository;
+    private final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+    private final UserRepository userRepository;
 
     UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;

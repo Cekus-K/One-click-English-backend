@@ -2,7 +2,6 @@ package pl.cekus.oneclickenglish.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.cekus.oneclickenglish.model.Word;
@@ -13,7 +12,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/words")
 class WordController {
-    private static final Logger logger = LoggerFactory.getLogger(WordController.class);
+    private final Logger logger = LoggerFactory.getLogger(WordController.class);
     private final WordService wordService;
 
     WordController(WordService wordService) {

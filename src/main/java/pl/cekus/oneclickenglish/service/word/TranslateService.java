@@ -12,11 +12,10 @@ import java.net.URLConnection;
 
 @Service
 class TranslateService {
-
-    @Value("${api-key}")
+    @Value("${translator-api-key}")
     private String apiKey;
 
-    public String request(String URL) throws IOException {
+    private String request(String URL) throws IOException {
         java.net.URL url = new URL(URL);
         URLConnection urlConn = url.openConnection();
         urlConn.addRequestProperty("User-Agent", "Mozilla");
@@ -29,7 +28,7 @@ class TranslateService {
         return recieved;
     }
 
-    public String translate(String text) throws IOException {
+    String translate(String text) throws IOException {
         String response = request("https://translate.yandex.net/api/v1.5/tr.json/translate?key="
                 + apiKey + "&text=" + text + "&lang=en-pl");
         return response.substring(response.indexOf("text") + 8, response.length() - 3);

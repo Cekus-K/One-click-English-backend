@@ -6,7 +6,7 @@ import pl.cekus.oneclickenglish.service.user.UserService;
 
 @Controller
 class UserController {
-    private UserService userService;
+    private final UserService userService;
 
     UserController(UserService userService) {
         this.userService = userService;

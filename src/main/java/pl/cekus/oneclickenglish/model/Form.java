@@ -13,6 +13,14 @@ public class Form {
     @JoinColumn(name = "word_id")
     private Word word;
 
+    public Form() {
+    }
+
+    public Form(String wordForm, Word word) {
+        this.wordForm = wordForm;
+        this.word = word;
+    }
+
     public Long getId() {
         return id;
     }

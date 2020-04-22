@@ -13,6 +13,14 @@ public class Example {
     @JoinColumn(name = "word_id")
     private Word word;
 
+    public Example() {
+    }
+
+    public Example(String sentence, Word word) {
+        this.sentence = sentence;
+        this.word = word;
+    }
+
     public Long getId() {
         return id;
     }
