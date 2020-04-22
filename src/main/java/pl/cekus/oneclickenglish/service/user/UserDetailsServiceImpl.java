@@ -10,8 +10,7 @@ import pl.cekus.oneclickenglish.repository.UserRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
-    private final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
     private UserRepository userRepository;
 
     UserDetailsServiceImpl(UserRepository userRepository) {
@@ -21,7 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         logger.info("Try load user - " + username);
-        return userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Invalid username"));
+        return userRepository.findUserByUsername(username);
     }
 }

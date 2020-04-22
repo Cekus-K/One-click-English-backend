@@ -15,7 +15,15 @@ public class Word {
     @ManyToMany(mappedBy = "words")
     private Set<User> users = new HashSet<>();
 
-    public Long getId() {
+    public Word() {
+    }
+
+    public Word(String enWord, String plWord) {
+        this.enWord = enWord;
+        this.plWord = plWord;
+    }
+
+    Long getId() {
         return id;
     }
 
@@ -27,7 +35,7 @@ public class Word {
         return enWord;
     }
 
-    public void setEnWord(String enWord) {
+    void setEnWord(String enWord) {
         this.enWord = enWord;
     }
 
@@ -35,15 +43,15 @@ public class Word {
         return plWord;
     }
 
-    public void setPlWord(String plWord) {
+    void setPlWord(String plWord) {
         this.plWord = plWord;
     }
 
-    public Set<User> getUsers() {
+    Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    void setUsers(Set<User> users) {
         this.users = users;
     }
 }

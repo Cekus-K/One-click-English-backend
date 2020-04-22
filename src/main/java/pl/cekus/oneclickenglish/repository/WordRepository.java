@@ -14,9 +14,9 @@ public interface WordRepository extends CrudRepository<Word, Long> {
     @Query("from Word w join w.users u where u.id=:userId")
     List<Word> findAllByUserId(Long userId);
 
-    Optional<Word> findWordByEnWord(String enWord);
+    Word findWordByEnWord(String enWord);
 
-    Optional<Word> findWordById(Long id);
+    Word findWordById(Long id);
 
     boolean existsById(Long id);
 }

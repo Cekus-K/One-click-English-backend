@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.repository.UserRepository;
 
-import java.util.Optional;
-
 @Service
 public class UserService {
-    private Logger logger = LoggerFactory.getLogger(UserService.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
 
@@ -25,17 +23,24 @@ public class UserService {
     }
 
     public User createUser(String username, String password, String passwordConfirm) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setPasswordConfirm(passwordEncoder.encode(passwordConfirm));
-        user.setRole(Roles.USER.toString());
-        userRepository.save(user);
-        logger.info("created user - " + user.getUsername());
-        return user;
+        if (userRepository.findUserByUsername(username) == null) {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode(password));
+            user.setPasswordConfirm(passwordEncoder.encode(passwordConfirm));
+            user.setRole(Roles.USER.toString());
+            userRepository.save(user);
+            logger.info("created user - " + user.getUsername());
+            return user;
+        }
+        return userRepository.findUserByUsername(username);
     }
 
-    public Optional<User> getCurrentLoggedInUser() {
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    public User getCurrentLoggedInUser() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userRepository.findUserByUsername(userDetails.getUsername());
     }

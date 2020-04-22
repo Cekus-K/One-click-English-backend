@@ -99,5 +99,13 @@ public class User implements UserDetails {
         return true;
     }
 
+    public void addWord(Word word) {
+        this.words.add(word);
+        word.getUsers().add(this);
+    }
 
+    public void removeWord(Word word) {
+        this.words.remove(word);
+        word.getUsers().remove(this);
+    }
 }
