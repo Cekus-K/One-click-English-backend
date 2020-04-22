@@ -26,12 +26,22 @@ class ExamController {
     }
 
     @GetMapping("/forms")
-    public Map<String, Map<String, List<String>>> generateSingleChoiceExam() {
+    public Map<String, List<String>> generateSingleChoiceExam() {
         return examService.generateSingleChoiceExam();
     }
 
+    @PostMapping("/definitions")
+    public List<Boolean> checkDefinitionsExam(@RequestBody Map<String, String> examToCheck) {
+        return examService.checkDefinitionsExam(examToCheck);
+    }
+
+    @PostMapping("/examples")
+    public List<Boolean> checkExamplesExam(@RequestBody Map<String, String> examToCheck) {
+        return examService.checkExamplesExam(examToCheck);
+    }
+
     @PostMapping("/forms")
-    public List<Boolean> checkSingleChoiceExam(@RequestBody List<String> words) {
-        return examService.checkSingleChoiceExam(words);
+    public List<Boolean> checkSingleChoiceExam(@RequestBody List<String> examToCheck) {
+        return examService.checkSingleChoiceExam(examToCheck);
     }
 }
