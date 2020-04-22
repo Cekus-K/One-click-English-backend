@@ -33,10 +33,7 @@ public class ExampleExamService {
         Map<String, String> exam = new HashMap<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-        // fixme: use words from the user after improve getting data from external API
-        // for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
-
-        for (Word word : wordRepository.findAll()) {
+        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
             String exampleSentence;
             try {
                 exampleSentence = exampleService.getExampleSentence(word.getEnWord());
@@ -50,7 +47,7 @@ public class ExampleExamService {
 
     public List<Boolean> checkExamplesExam(Map<String, String> examToCheck) {
         List<Boolean> answers = new ArrayList<>();
-        for (String enWord: examToCheck.keySet()) {
+        for (String enWord : examToCheck.keySet()) {
             answers.add(examToCheck.get(enWord)
                     .contains(enWord));
         }

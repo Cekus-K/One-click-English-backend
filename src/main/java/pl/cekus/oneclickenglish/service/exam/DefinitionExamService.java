@@ -5,15 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.model.Word;
-import pl.cekus.oneclickenglish.repository.DefinitionRepository;
 import pl.cekus.oneclickenglish.repository.WordRepository;
 import pl.cekus.oneclickenglish.service.user.UserService;
 import pl.cekus.oneclickenglish.service.word.DefinitionService;
-import pl.cekus.oneclickenglish.service.word.ExampleService;
-import pl.cekus.oneclickenglish.service.word.FormService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class DefinitionExamService {
@@ -36,11 +32,8 @@ public class DefinitionExamService {
     public Map<String, String> generateDefinitionsExam() {
         Map<String, String> exam = new HashMap<>();
         User currentUser = userService.getCurrentLoggedInUser();
-        
-        // fixme: use words from the user after improve getting data from external API
-        // for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
 
-        for (Word word : wordRepository.findAll()) {
+        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
             String definitionOfWord;
             try {
                 definitionOfWord = definitionService.getDefinitionOfWord(word.getEnWord());

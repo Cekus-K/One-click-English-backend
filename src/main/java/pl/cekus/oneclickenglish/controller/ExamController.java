@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.cekus.oneclickenglish.service.exam.DefinitionExamService;
 import pl.cekus.oneclickenglish.service.exam.ExampleExamService;
 import pl.cekus.oneclickenglish.service.exam.FormExamService;
+import pl.cekus.oneclickenglish.service.exam.RandomExamService;
 
 import java.util.List;
 import java.util.Map;
@@ -15,11 +16,18 @@ class ExamController {
     private DefinitionExamService definitionExamService;
     private ExampleExamService exampleExamService;
     private FormExamService formExamService;
+    private RandomExamService randomExamService;
 
-    ExamController(DefinitionExamService definitionExamService, ExampleExamService exampleExamService, FormExamService formExamService) {
+    ExamController(
+            DefinitionExamService definitionExamService,
+            ExampleExamService exampleExamService,
+            FormExamService formExamService,
+            RandomExamService randomExamService
+    ) {
         this.definitionExamService = definitionExamService;
         this.exampleExamService = exampleExamService;
         this.formExamService = formExamService;
+        this.randomExamService = randomExamService;
     }
 
     @GetMapping("/definitions")
@@ -37,6 +45,11 @@ class ExamController {
         return formExamService.generateSingleChoiceExam();
     }
 
+    @GetMapping("/random")
+    public Map<String, List<String>> generateRandomWordsExam() {
+        return randomExamService.generateRandomWordsExam();
+    }
+
     @PostMapping("/definitions")
     public List<Boolean> checkDefinitionsExam(@RequestBody Map<String, String> examToCheck) {
         return definitionExamService.checkDefinitionsExam(examToCheck);
@@ -50,5 +63,10 @@ class ExamController {
     @PostMapping("/forms")
     public List<Boolean> checkSingleChoiceExam(@RequestBody List<String> examToCheck) {
         return formExamService.checkSingleChoiceExam(examToCheck);
+    }
+
+    @PostMapping("/random")
+    public List<Boolean> checkRandomWordsExam(@RequestBody List<String> examToCheck) {
+        return randomExamService.checkRandomExam(examToCheck);
     }
 }

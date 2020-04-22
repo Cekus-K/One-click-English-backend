@@ -8,53 +8,57 @@ import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.WordRepository;
 import pl.cekus.oneclickenglish.service.user.UserService;
 import pl.cekus.oneclickenglish.service.word.ExampleService;
-import pl.cekus.oneclickenglish.service.word.FormService;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class FormExamService {
-    private final Logger logger = LoggerFactory.getLogger(FormExamService.class);
+public class RandomExamService {
+    private final Logger logger = LoggerFactory.getLogger(RandomExamService.class);
     private final ExampleService exampleService;
-    private final FormService formService;
     private final WordRepository wordRepository;
     private final UserService userService;
 
-    FormExamService(
+    RandomExamService(
             ExampleService exampleService,
-            FormService formService,
             WordRepository wordRepository,
             UserService userService
     ) {
         this.exampleService = exampleService;
-        this.formService = formService;
         this.wordRepository = wordRepository;
         this.userService = userService;
     }
 
-    // <example sentence : list <of 4 forms of word with one correct>>
-    public Map<String, List<String>> generateSingleChoiceExam() {
+    // <example sentence : list <of 4 words with one correct>>
+    public Map<String, List<String>> generateRandomWordsExam() {
         Map<String, List<String>> exam = new HashMap<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
-            List<String> wordForms;
+        Random random = new Random();
+        int size = wordRepository.findAll().size();
+
+        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
+            List<Word> randomWords = new ArrayList<>();
             String example;
             try {
-                wordForms = formService.getFormsOfWord(word.getEnWord());
-                wordForms.add(word.getEnWord());
-                Collections.shuffle(wordForms);
+                randomWords.add(word);
                 example = exampleService.getExampleSentence(word.getEnWord());
-                exam.put(example, wordForms);
+                while (randomWords.size() < 4) {
+                    Word toCheck = wordRepository.findById((long) random.nextInt(size)).orElseThrow(Exception::new);
+                    if (!randomWords.contains(toCheck)) {
+                        randomWords.add(toCheck);
+                    }
+                }
+                Collections.shuffle(randomWords);
+                exam.put(example, randomWords.stream().map(Word::getEnWord).collect(Collectors.toList()));
             } catch (Exception e) {
-                logger.info("No forms or examples found for the word: " + word.getEnWord());
+                logger.info("No examples found for the word: " + word.getEnWord());
             }
         }
         return exam;
     }
 
-    public List<Boolean> checkSingleChoiceExam(List<String> examToCheck) {
+    public List<Boolean> checkRandomExam(List<String> examToCheck) {
         return examToCheck.stream()
                 .map(wordRepository::existsByEnWord)
                 .collect(Collectors.toList());
