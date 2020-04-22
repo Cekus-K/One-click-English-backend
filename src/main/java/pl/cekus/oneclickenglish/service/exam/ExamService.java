@@ -102,7 +102,7 @@ public class ExamService {
         List<Boolean> answers = new ArrayList<>();
         for (String enWord: examToCheck.keySet()) {
             answers.add(definitionRepository
-                    .existsByWord(wordRepository.findWordByEnWord(enWord)));
+                    .existsByDescriptionAndWord(examToCheck.get(enWord), wordRepository.findWordByEnWord(enWord)));
         }
         return answers;
     }

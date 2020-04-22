@@ -15,5 +15,5 @@ public interface DefinitionRepository extends CrudRepository<Definition, Long> {
 
     Optional<Definition> findFirstByWord(Word word);
 
-    boolean existsByWord(Word word);
+    boolean existsByDescriptionAndWord(String description, Word word);
 }

@@ -14,5 +14,4 @@ public interface ExampleRepository extends CrudRepository<Example, Long> {
     List<Example> findAllByWord(Word word);
 
     Optional<Example> findFirstByWord(Word word);
-
 }
