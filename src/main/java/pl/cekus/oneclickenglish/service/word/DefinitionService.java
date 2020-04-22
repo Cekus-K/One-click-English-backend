@@ -15,7 +15,9 @@ import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.DefinitionRepository;
 import pl.cekus.oneclickenglish.repository.WordRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -67,5 +69,15 @@ public class DefinitionService {
                 .findFirstByWord(wordRepository.findWordByEnWord(enWord))
                 .orElseThrow(Exception::new)
                 .getDescription();
+    }
+
+    public List<Boolean> checkExistsByDescAndWord (Map<String, String> mapToCheck) {
+        List<Boolean> booleans = new ArrayList<>();
+        Word word;
+        for (String key: mapToCheck.keySet()) {
+            word = wordRepository.findWordByEnWord(mapToCheck.get(key));
+            booleans.add(definitionRepository.existsByDescriptionAndWord(key, word));
+        }
+        return booleans;
     }
 }
