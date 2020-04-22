@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.cekus.oneclickenglish.service.exam.ExamService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -24,5 +25,10 @@ class ExamController {
     @GetMapping("/examples")
     public Map<String, String> generateExamplesExam() {
         return examService.generateExamplesExam();
+    }
+
+    @GetMapping("/forms")
+    public Map<String, Map<String, List<String>>> generateSingleChoiceExam() {
+        return examService.generateSingleChoiceExam();
     }
 }
