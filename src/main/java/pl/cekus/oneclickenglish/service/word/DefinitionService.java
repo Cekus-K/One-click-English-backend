@@ -55,18 +55,17 @@ public class DefinitionService {
     }
 
     public List<String> getDefinitionsOfWord(String enWord) {
-        Word word = wordRepository.findWordByEnWord(enWord);
         return definitionRepository
-                .findAllByWord(word)
+                .findAllByWord(wordRepository.findWordByEnWord(enWord))
                 .stream()
                 .map(Definition::getDescription)
                 .collect(Collectors.toList());
     }
 
     public String getDefinitionOfWord(String enWord) throws Exception {
-        Word word = wordRepository.findWordByEnWord(enWord);
         return definitionRepository
-                .findFirstByWord(word).orElseThrow(Exception::new)
+                .findFirstByWord(wordRepository.findWordByEnWord(enWord))
+                .orElseThrow(Exception::new)
                 .getDescription();
     }
 }

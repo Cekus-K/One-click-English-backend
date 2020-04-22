@@ -28,7 +28,7 @@ class WordController {
     @ResponseBody
     List<Word> readAll() {
         logger.info("reading all user words");
-        return wordService.getAllWords();
+        return wordService.getAllUserWords();
     }
 
     @PostMapping("/add")

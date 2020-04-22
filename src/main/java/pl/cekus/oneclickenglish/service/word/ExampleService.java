@@ -56,18 +56,17 @@ public class ExampleService {
     }
 
     public List<String> getExampleSentences(String enWord) {
-        Word word = wordRepository.findWordByEnWord(enWord);
         return exampleRepository
-                .findAllByWord(word)
+                .findAllByWord(wordRepository.findWordByEnWord(enWord))
                 .stream()
                 .map(Example::getSentence)
                 .collect(Collectors.toList());
     }
 
     public String getExampleSentence(String enWord) throws Exception {
-        Word word = wordRepository.findWordByEnWord(enWord);
         return exampleRepository
-                .findFirstByWord(word).orElseThrow(Exception::new)
+                .findFirstByWord(wordRepository.findWordByEnWord(enWord))
+                .orElseThrow(Exception::new)
                 .getSentence();
     }
 }

@@ -14,6 +14,7 @@ import pl.cekus.oneclickenglish.service.word.FormService;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamService {
@@ -94,5 +95,11 @@ public class ExamService {
             }
         }
         return exam;
+    }
+
+    public List<Boolean> checkSingleChoiceExam(List<String> words) {
+        return words.stream()
+                .map(wordRepository::existsByEnWord)
+                .collect(Collectors.toList());
     }
 }

@@ -1,8 +1,6 @@
 package pl.cekus.oneclickenglish.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.cekus.oneclickenglish.service.exam.ExamService;
 
 import java.util.List;
@@ -30,5 +28,10 @@ class ExamController {
     @GetMapping("/forms")
     public Map<String, Map<String, List<String>>> generateSingleChoiceExam() {
         return examService.generateSingleChoiceExam();
+    }
+
+    @PostMapping("/forms")
+    public List<Boolean> checkSingleChoiceExam(@RequestBody List<String> words) {
+        return examService.checkSingleChoiceExam(words);
     }
 }

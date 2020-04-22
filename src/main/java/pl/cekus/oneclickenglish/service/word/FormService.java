@@ -32,9 +32,8 @@ public class FormService {
     }
 
     public List<String> getFormsOfWord(String enWord) {
-        Word word = wordRepository.findWordByEnWord(enWord);
         return formRepository
-                .findAllByWord(word)
+                .findAllByWord(wordRepository.findWordByEnWord(enWord))
                 .stream()
                 .map(Form::getWordForm)
                 .collect(Collectors.toList());
