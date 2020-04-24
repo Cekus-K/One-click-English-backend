@@ -69,4 +69,8 @@ public class ExampleService {
                 .orElseThrow(Exception::new)
                 .getSentence();
     }
+
+    public boolean checkExists(Word word) {
+        return exampleRepository.existsByWord(word);
+    }
 }

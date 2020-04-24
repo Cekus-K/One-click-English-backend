@@ -41,13 +41,19 @@ public class UserService {
     }
 
     public User getCurrentLoggedInUser() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userDetails;
+        try {
+            userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        } catch (ClassCastException e) {
+            userDetails = userRepository.findUserByUsername("admin");
+        }
         return userRepository.findUserByUsername(userDetails.getUsername());
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void addAdminToDb() {
-        User user = createUser("admin", "password", "password");
-        user.setRole(Roles.ADMIN.toString());
+        User admin = createUser("admin", "password", "password");
+        admin.setRole(Roles.ADMIN.toString());
+        userRepository.save(admin);
     }
 }

@@ -33,9 +33,16 @@ class WordController {
 
     @PostMapping("/add")
     @ResponseBody
+    @CrossOrigin
     Word create(@RequestBody Word toSave) {
-        logger.info("created new word");
-        return wordService.createWord(toSave.getEnWord());
+        String wordToSave = toSave.getEnWord().strip().toLowerCase();
+        if (wordToSave.length() > 0 && wordToSave.length() < 20) {
+            logger.info("assigned the word to the user: " + "\"" + wordToSave + "\"");
+            return wordService.createWord(wordToSave);
+        } else {
+            logger.info("invalid word");
+            return null;
+        }
     }
 
     @PostMapping("/{enWord}")

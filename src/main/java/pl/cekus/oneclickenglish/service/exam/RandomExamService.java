@@ -35,7 +35,7 @@ public class RandomExamService {
         User currentUser = userService.getCurrentLoggedInUser();
 
         Random random = new Random();
-        int size = wordRepository.findAll().size();
+        int index = wordRepository.findAll().size() - 1;
 
         for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
             List<Word> randomWords = new ArrayList<>();
@@ -44,7 +44,7 @@ public class RandomExamService {
                 randomWords.add(word);
                 example = exampleService.getExampleSentence(word.getEnWord());
                 while (randomWords.size() < 4) {
-                    Word toCheck = wordRepository.findById((long) random.nextInt(size)).orElseThrow(Exception::new);
+                    Word toCheck = wordRepository.findById((long) random.nextInt(index) + 1).orElseThrow(Exception::new);
                     if (!randomWords.contains(toCheck)) {
                         randomWords.add(toCheck);
                     }

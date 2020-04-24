@@ -2,6 +2,7 @@ package pl.cekus.oneclickenglish;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -30,7 +31,6 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService);
     }
 
-    //todo: configure users
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic()
@@ -38,17 +38,21 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/words").hasAnyAuthority("ADMIN", "USER")
+                .antMatchers("/words/add").permitAll()
                 .antMatchers("/test").hasAnyAuthority("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login").permitAll()
+                .loginPage("/login")
+                .permitAll()
                 .defaultSuccessUrl("/words", true)
                 .and()
                 .logout()
-                .logoutSuccessUrl("/login").permitAll()
-                .and()
-                .headers().frameOptions().disable()
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .permitAll()
                 .and()
                 .csrf().disable();
     }

@@ -80,4 +80,8 @@ public class DefinitionService {
         }
         return booleans;
     }
+
+    public boolean checkExists(Word word) {
+        return definitionRepository.existsByWord(word);
+    }
 }
