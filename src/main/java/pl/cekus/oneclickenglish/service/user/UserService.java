@@ -44,8 +44,10 @@ public class UserService {
         UserDetails userDetails;
         try {
             userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            logger.info("get current logged-in user");
         } catch (ClassCastException e) {
             userDetails = userRepository.findUserByUsername("admin");
+            logger.info("get default admin user");
         }
         return userRepository.findUserByUsername(userDetails.getUsername());
     }
