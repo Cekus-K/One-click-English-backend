@@ -33,7 +33,8 @@ public class DefinitionExamService {
         Map<String, String> exam = new HashMap<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
+//        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
+        for (Word word : wordRepository.findAll()) {
             String definitionOfWord;
             try {
                 definitionOfWord = definitionService.getDefinitionOfWord(word.getEnWord());

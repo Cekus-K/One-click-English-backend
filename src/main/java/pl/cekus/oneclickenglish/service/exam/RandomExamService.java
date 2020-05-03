@@ -37,7 +37,8 @@ public class RandomExamService {
         Random random = new Random();
         int index = wordRepository.findAll().size() - 1;
 
-        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
+//        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
+        for (Word word : wordRepository.findAll()) {
             List<Word> randomWords = new ArrayList<>();
             String example;
             try {

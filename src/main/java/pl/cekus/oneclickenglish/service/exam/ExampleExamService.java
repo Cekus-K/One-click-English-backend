@@ -33,7 +33,8 @@ public class ExampleExamService {
         Map<String, String> exam = new HashMap<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
+//        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
+        for (Word word : wordRepository.findAll()) {
             String exampleSentence;
             try {
                 exampleSentence = exampleService.getExampleSentence(word.getEnWord());

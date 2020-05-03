@@ -39,8 +39,8 @@ class WordController {
         }
     }
 
-    @PostMapping("/{enWord}")
-    void deleteWordFromUser(@PathVariable String enWord) {
-        wordService.deleteWord(enWord);
+    @PostMapping("/remove")
+    void deleteWordFromUser(@RequestBody Word toRemove) {
+        wordService.deleteWord(toRemove.getEnWord());
     }
 }

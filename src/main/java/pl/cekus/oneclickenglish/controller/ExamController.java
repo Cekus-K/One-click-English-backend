@@ -5,12 +5,14 @@ import pl.cekus.oneclickenglish.service.exam.DefinitionExamService;
 import pl.cekus.oneclickenglish.service.exam.ExampleExamService;
 import pl.cekus.oneclickenglish.service.exam.FormExamService;
 import pl.cekus.oneclickenglish.service.exam.RandomExamService;
+import pl.cekus.oneclickenglish.service.exam.questions.FormQuestion;
 
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin("*")
 @RestController
-@RequestMapping("/exam")
+@RequestMapping("/api/exam")
 class ExamController {
 
     private DefinitionExamService definitionExamService;
@@ -41,7 +43,7 @@ class ExamController {
     }
 
     @GetMapping("/forms")
-    public Map<String, List<String>> generateSingleChoiceExam() {
+    public List<FormQuestion> generateSingleChoiceExam() {
         return formExamService.generateSingleChoiceExam();
     }
 
