@@ -39,14 +39,15 @@ public class FormExamService {
         List<ChoiceTestQuestion> questions = new ArrayList<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
+//        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
+        for (Word word : wordRepository.findAll()) {
             List<String> wordForms;
             String example;
             try {
                 wordForms = formService.getFormsOfWord(word.getEnWord());
                 wordForms.add(word.getEnWord());
                 Collections.shuffle(wordForms);
-                example = exampleService.getExampleSentence(word.getEnWord());
+                example = exampleService.getExampleSentence(word);
                 if (wordForms.size() == 4) {
                     questions.add(new ChoiceTestQuestion(example.replace(word.getEnWord(), ".........."), word.getEnWord(), wordForms));
                 }

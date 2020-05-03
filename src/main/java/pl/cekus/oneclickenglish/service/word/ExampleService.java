@@ -63,9 +63,9 @@ public class ExampleService {
                 .collect(Collectors.toList());
     }
 
-    public String getExampleSentence(String enWord) throws Exception {
+    public String getExampleSentence(Word word) throws Exception {
         return exampleRepository
-                .findFirstByWord(wordRepository.findWordByEnWord(enWord))
+                .findFirstByWord(word)
                 .orElseThrow(Exception::new)
                 .getSentence();
     }

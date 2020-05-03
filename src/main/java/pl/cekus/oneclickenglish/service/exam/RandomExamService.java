@@ -43,7 +43,7 @@ public class RandomExamService {
             String example;
             try {
                 randomWords.add(word);
-                example = exampleService.getExampleSentence(word.getEnWord());
+                example = exampleService.getExampleSentence(word);
                 while (randomWords.size() < 4) {
                     Word toCheck = wordRepository.findById((long) random.nextInt(index) + 1).orElseThrow(Exception::new);
                     if (!randomWords.contains(toCheck)) {

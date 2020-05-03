@@ -37,7 +37,7 @@ public class ExampleExamService {
         for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
             String exampleSentence;
             try {
-                exampleSentence = exampleService.getExampleSentence(word.getEnWord());
+                exampleSentence = exampleService.getExampleSentence(word);
                 questions.add(new WrittenTestQuestion(exampleSentence.replace(word.getEnWord(), ".........."), word));
             } catch (Exception e) {
                 logger.info("No example found for the word: " + word.getEnWord());
