@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.WordRepository;
-import pl.cekus.oneclickenglish.service.exam.questions.FormQuestion;
+import pl.cekus.oneclickenglish.service.exam.questions.ChoiceTestQuestion;
 import pl.cekus.oneclickenglish.service.user.UserService;
 import pl.cekus.oneclickenglish.service.word.ExampleService;
 import pl.cekus.oneclickenglish.service.word.FormService;
@@ -34,15 +34,12 @@ public class FormExamService {
         this.userService = userService;
     }
 
-    // <example sentence : list <of 4 forms of word with one correct>>
-//    public Map<String, List<String>> generateSingleChoiceExam() {
-    public List<FormQuestion> generateSingleChoiceExam() {
-        List<FormQuestion> questions = new ArrayList<>();
-//        Map<String, List<String>> exam = new HashMap<>();
+    // Verb selection exam
+    public List<ChoiceTestQuestion> generateSingleChoiceExam() {
+        List<ChoiceTestQuestion> questions = new ArrayList<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-//        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
-        for (Word word : wordRepository.findAll()) {
+        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
             List<String> wordForms;
             String example;
             try {
@@ -50,8 +47,9 @@ public class FormExamService {
                 wordForms.add(word.getEnWord());
                 Collections.shuffle(wordForms);
                 example = exampleService.getExampleSentence(word.getEnWord());
-//                exam.put(example, wordForms);
-                questions.add(new FormQuestion(example, wordForms));
+                if (wordForms.size() == 4) {
+                    questions.add(new ChoiceTestQuestion(example.replace(word.getEnWord(), ".........."), word.getEnWord(), wordForms));
+                }
             } catch (Exception e) {
                 logger.info("No forms or examples found for the word: " + word.getEnWord());
             }

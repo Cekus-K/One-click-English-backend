@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.WordRepository;
+import pl.cekus.oneclickenglish.service.exam.questions.ChoiceTestQuestion;
 import pl.cekus.oneclickenglish.service.user.UserService;
 import pl.cekus.oneclickenglish.service.word.ExampleService;
 
@@ -29,16 +30,15 @@ public class RandomExamService {
         this.userService = userService;
     }
 
-    // <example sentence : list <of 4 words with one correct>>
-    public Map<String, List<String>> generateRandomWordsExam() {
-        Map<String, List<String>> exam = new HashMap<>();
+    //  Selection exam with random words
+    public List<ChoiceTestQuestion> generateRandomWordsExam() {
+        List<ChoiceTestQuestion> questions = new ArrayList<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
         Random random = new Random();
         int index = wordRepository.findAll().size() - 1;
 
-//        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
-        for (Word word : wordRepository.findAll()) {
+        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
             List<Word> randomWords = new ArrayList<>();
             String example;
             try {
@@ -51,12 +51,15 @@ public class RandomExamService {
                     }
                 }
                 Collections.shuffle(randomWords);
-                exam.put(example, randomWords.stream().map(Word::getEnWord).collect(Collectors.toList()));
+                questions.add(new ChoiceTestQuestion(
+                        example.replace(word.getEnWord(), ".........."),
+                        word.getEnWord(),
+                        randomWords.stream().map(Word::getEnWord).collect(Collectors.toList())));
             } catch (Exception e) {
                 logger.info("No examples found for the word: " + word.getEnWord());
             }
         }
-        return exam;
+        return questions;
     }
 
     public List<Boolean> checkRandomExam(List<String> examToCheck) {

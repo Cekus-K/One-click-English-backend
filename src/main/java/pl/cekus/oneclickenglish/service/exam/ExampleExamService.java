@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.WordRepository;
+import pl.cekus.oneclickenglish.service.exam.questions.WrittenTestQuestion;
 import pl.cekus.oneclickenglish.service.user.UserService;
 import pl.cekus.oneclickenglish.service.word.ExampleService;
 
@@ -28,22 +29,21 @@ public class ExampleExamService {
         this.userService = userService;
     }
 
-    // <english word (answer) : example sentence using this english word>
-    public Map<String, String> generateExamplesExam() {
-        Map<String, String> exam = new HashMap<>();
+    // Exam with examples sentences and word inside
+    public List<WrittenTestQuestion> generateExamplesExam() {
+        List<WrittenTestQuestion> questions = new ArrayList<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-//        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
-        for (Word word : wordRepository.findAll()) {
+        for (Word word : wordRepository.findAllByUserId(currentUser.getId())) {
             String exampleSentence;
             try {
                 exampleSentence = exampleService.getExampleSentence(word.getEnWord());
-                exam.put(word.getEnWord(), exampleSentence);
+                questions.add(new WrittenTestQuestion(exampleSentence.replace(word.getEnWord(), ".........."), word));
             } catch (Exception e) {
                 logger.info("No example found for the word: " + word.getEnWord());
             }
         }
-        return exam;
+        return questions;
     }
 
     public List<Boolean> checkExamplesExam(Map<String, String> examToCheck) {

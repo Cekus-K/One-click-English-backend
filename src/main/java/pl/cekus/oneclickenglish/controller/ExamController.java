@@ -5,7 +5,8 @@ import pl.cekus.oneclickenglish.service.exam.DefinitionExamService;
 import pl.cekus.oneclickenglish.service.exam.ExampleExamService;
 import pl.cekus.oneclickenglish.service.exam.FormExamService;
 import pl.cekus.oneclickenglish.service.exam.RandomExamService;
-import pl.cekus.oneclickenglish.service.exam.questions.FormQuestion;
+import pl.cekus.oneclickenglish.service.exam.questions.ChoiceTestQuestion;
+import pl.cekus.oneclickenglish.service.exam.questions.WrittenTestQuestion;
 
 import java.util.List;
 import java.util.Map;
@@ -33,22 +34,22 @@ class ExamController {
     }
 
     @GetMapping("/definitions")
-    public Map<String, String> generateDefinitionsExam() {
+    public List<WrittenTestQuestion> generateDefinitionsExam() {
         return definitionExamService.generateDefinitionsExam();
     }
 
     @GetMapping("/examples")
-    public Map<String, String> generateExamplesExam() {
+    public List<WrittenTestQuestion> generateExamplesExam() {
         return exampleExamService.generateExamplesExam();
     }
 
     @GetMapping("/forms")
-    public List<FormQuestion> generateSingleChoiceExam() {
+    public List<ChoiceTestQuestion> generateSingleChoiceExam() {
         return formExamService.generateSingleChoiceExam();
     }
 
     @GetMapping("/random")
-    public Map<String, List<String>> generateRandomWordsExam() {
+    public List<ChoiceTestQuestion> generateRandomWordsExam() {
         return randomExamService.generateRandomWordsExam();
     }
 

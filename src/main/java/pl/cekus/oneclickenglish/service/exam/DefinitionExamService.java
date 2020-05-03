@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.WordRepository;
+import pl.cekus.oneclickenglish.service.exam.questions.WrittenTestQuestion;
 import pl.cekus.oneclickenglish.service.user.UserService;
 import pl.cekus.oneclickenglish.service.word.DefinitionService;
 
@@ -28,22 +29,21 @@ public class DefinitionExamService {
         this.userService = userService;
     }
 
-    // <english word (answer) : definition of this english word>
-    public Map<String, String> generateDefinitionsExam() {
-        Map<String, String> exam = new HashMap<>();
+    // Exam with word definitions
+    public List<WrittenTestQuestion> generateDefinitionsExam() {
+        List<WrittenTestQuestion> questions = new ArrayList<>();
         User currentUser = userService.getCurrentLoggedInUser();
 
-//        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
-        for (Word word : wordRepository.findAll()) {
+        for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
             String definitionOfWord;
             try {
                 definitionOfWord = definitionService.getDefinitionOfWord(word.getEnWord());
-                exam.put(word.getEnWord(), definitionOfWord);
+                questions.add(new WrittenTestQuestion(definitionOfWord, word));
             } catch (Exception e) {
                 logger.info("No definition found for the word: " + word.getEnWord());
             }
         }
-        return exam;
+        return questions;
     }
 
     public List<Boolean> checkDefinitionsExam(Map<String, String> examToCheck) {
