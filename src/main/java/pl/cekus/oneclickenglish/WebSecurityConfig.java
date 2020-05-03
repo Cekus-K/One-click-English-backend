@@ -33,27 +33,26 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.cors();
         http.httpBasic()
-                .and()
+                .and().csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/register").permitAll()
-                .antMatchers("/words").hasAnyAuthority("ADMIN", "USER")
-                .antMatchers("/words/add").permitAll()
-                .antMatchers("/test").hasAnyAuthority("ADMIN")
+                .antMatchers("/api/user/register").permitAll()
+//                .antMatchers("/words").hasAnyAuthority("ADMIN", "USER")
+//                .antMatchers("/words/add").permitAll()
+//                .antMatchers("/test").hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/words", true)
-                .and()
+//                .formLogin()
+//                .loginPage("/login")
+//                .permitAll()
+//                .defaultSuccessUrl("/words", true)
+//                .and()
                 .logout()
-                .logoutSuccessUrl("/login")
+//                .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .permitAll()
-                .and()
-                .csrf().disable();
+                .deleteCookies("JSESSIONID");
+//                .permitAll()
     }
 }

@@ -9,8 +9,9 @@ import pl.cekus.oneclickenglish.service.word.WordService;
 
 import java.util.List;
 
-@Controller
-@RequestMapping("/words")
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/api/words")
 class WordController {
     private final Logger logger = LoggerFactory.getLogger(WordController.class);
     private final WordService wordService;
@@ -19,21 +20,14 @@ class WordController {
         this.wordService = wordService;
     }
 
-    @GetMapping
-    public String getWordsPage(){
-        return "words";
-    }
 
     @GetMapping("/list")
-    @ResponseBody
     List<Word> readAll() {
         logger.info("reading all user words");
         return wordService.getAllUserWords();
     }
 
     @PostMapping("/add")
-    @ResponseBody
-    @CrossOrigin
     Word create(@RequestBody Word toSave) {
         String wordToSave = toSave.getEnWord().strip().toLowerCase();
         if (wordToSave.length() > 0 && wordToSave.length() < 20) {
@@ -46,7 +40,6 @@ class WordController {
     }
 
     @PostMapping("/{enWord}")
-    @ResponseBody
     void deleteWordFromUser(@PathVariable String enWord) {
         wordService.deleteWord(enWord);
     }

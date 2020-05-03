@@ -22,18 +22,19 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(String username, String password, String passwordConfirm) {
-        if (userRepository.findUserByUsername(username) == null) {
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(passwordEncoder.encode(password));
-            user.setPasswordConfirm(passwordEncoder.encode(passwordConfirm));
-            user.setRole(Roles.USER.toString());
+    public User createUser(User user) {
+        if (userRepository.findUserByUsername(user.getUsername()) == null) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            if (user.getUsername().equals("admin")) {
+                user.setRole(Roles.ADMIN.toString());
+            } else {
+                user.setRole(Roles.USER.toString());
+            }
             userRepository.save(user);
             logger.info("created user - " + user.getUsername());
             return user;
         }
-        return userRepository.findUserByUsername(username);
+        return userRepository.findUserByUsername(user.getUsername());
     }
 
     public void save(User user) {
@@ -54,8 +55,11 @@ public class UserService {
 
     @EventListener(ApplicationReadyEvent.class)
     public void addAdminToDb() {
-        User admin = createUser("admin", "password", "password");
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setPassword("password");
+        admin.setPasswordConfirm("password");
         admin.setRole(Roles.ADMIN.toString());
-        userRepository.save(admin);
+        createUser(admin);
     }
 }

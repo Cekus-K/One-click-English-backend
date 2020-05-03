@@ -1,10 +1,11 @@
 package pl.cekus.oneclickenglish.controller;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.service.user.UserService;
 
-@Controller
+@CrossOrigin(origins = "*")
+@RestController
+@RequestMapping("/api/user")
 class UserController {
     private final UserService userService;
 
@@ -12,20 +13,8 @@ class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/register")
-    public String getRegisterForm(){
-        return "register";
-    }
-
-    @GetMapping("/login")
-    public String getLoginForm() {
-        return "login";
-    }
-
     @PostMapping("/register")
-    public void register(@RequestBody User user) {
-        if (user.getPassword().equals(user.getPasswordConfirm())) {
-            userService.createUser(user.getUsername(), user.getPassword(), user.getPasswordConfirm());
-        }
+    public User register(@RequestBody User user) {
+        return userService.createUser(user);
     }
 }

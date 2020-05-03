@@ -74,6 +74,7 @@ public class WordService {
 
     public List<Word> getAllUserWords() {
         return wordRepository.findAllByUserId(userService.getCurrentLoggedInUser().getId());
+//        return wordRepository.findAll();
     }
 
     public void deleteWord(String enWord) {
