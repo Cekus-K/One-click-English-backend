@@ -52,7 +52,7 @@ public class RandomExamService {
                 }
                 Collections.shuffle(randomWords);
                 questions.add(new ChoiceTestQuestion(
-                        example.replace(word.getEnWord(), ".........."),
+                        example.replace(word.getEnWord(), "............."),
                         word.getEnWord(),
                         randomWords.stream().map(Word::getEnWord).collect(Collectors.toList())));
             } catch (Exception e) {

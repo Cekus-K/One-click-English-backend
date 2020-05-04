@@ -37,7 +37,7 @@ public class DefinitionExamService {
         for (Word word: wordRepository.findAllByUserId(currentUser.getId())) {
             String definitionOfWord;
             try {
-                definitionOfWord = definitionService.getDefinitionOfWord(word.getEnWord());
+                definitionOfWord = definitionService.getDefinitionOfWord(word);
                 questions.add(new WrittenTestQuestion(definitionOfWord, word));
             } catch (Exception e) {
                 logger.info("No definition found for the word: " + word.getEnWord());

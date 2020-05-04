@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.Definition;
+import pl.cekus.oneclickenglish.model.Example;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.DefinitionRepository;
 import pl.cekus.oneclickenglish.repository.WordRepository;
@@ -18,6 +19,7 @@ import pl.cekus.oneclickenglish.repository.WordRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,11 +66,10 @@ public class DefinitionService {
                 .collect(Collectors.toList());
     }
 
-    public String getDefinitionOfWord(String enWord) throws Exception {
-        return definitionRepository
-                .findFirstByWord(wordRepository.findWordByEnWord(enWord))
-                .orElseThrow(Exception::new)
-                .getDescription();
+    public String getDefinitionOfWord(Word word) throws Exception {
+        List<Definition> definitions = definitionRepository.findAllByWord(word);
+        Random random = new Random();
+        return definitions.get(random.nextInt(definitions.size() -1) +1).getDescription();
     }
 
     public List<Boolean> checkExistsByDescAndWord (Map<String, String> mapToCheck) {

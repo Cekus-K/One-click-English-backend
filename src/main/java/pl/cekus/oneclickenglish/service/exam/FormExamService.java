@@ -47,9 +47,9 @@ public class FormExamService {
                 wordForms = formService.getFormsOfWord(word.getEnWord());
                 wordForms.add(word.getEnWord());
                 Collections.shuffle(wordForms);
-                example = exampleService.getExampleSentence(word);
+                example = exampleService.getExampleSentence(word.getEnWord());
                 if (wordForms.size() == 4) {
-                    questions.add(new ChoiceTestQuestion(example.replace(word.getEnWord(), ".........."), word.getEnWord(), wordForms));
+                    questions.add(new ChoiceTestQuestion(example.replace(word.getEnWord(), "............."), word.getEnWord(), wordForms));
                 }
             } catch (Exception e) {
                 logger.info("No forms or examples found for the word: " + word.getEnWord());
