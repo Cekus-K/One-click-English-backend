@@ -1,36 +1,22 @@
 package pl.cekus.oneclickenglish.service.word;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 
 @Service
 class TranslateService {
-    @Value("${translator-api-key}")
-    private String apiKey;
 
-    private String request(String URL) throws IOException {
-        java.net.URL url = new URL(URL);
-        URLConnection urlConn = url.openConnection();
-        urlConn.addRequestProperty("User-Agent", "Mozilla");
+    String translate(String word) throws Exception {
+        HttpResponse<String> response = Unirest.get("https://api.mymemory.translated.net/get?q=" + word + "&langpair=en%7Cpl")
+                .asString();
 
-        InputStream inStream = urlConn.getInputStream();
-
-        String recieved = new BufferedReader(new InputStreamReader(inStream)).readLine();
-
-        inStream.close();
-        return recieved;
-    }
-
-    String translate(String text) throws IOException {
-        String response = request("https://translate.yandex.net/api/v1.5/tr.json/translate?key="
-                + apiKey + "&text=" + text + "&lang=en-pl");
-        return response.substring(response.indexOf("text") + 8, response.length() - 3);
+        org.json.JSONObject obj = new JSONObject(response.getBody());
+        String translatedWord = ((String) obj.getJSONObject("responseData").get("translatedText")).toLowerCase();
+        if (!translatedWord.equals(word) && translatedWord.length() > 0) {
+            return translatedWord.toLowerCase();
+        }
+        throw new Exception("Invalid word entered or translation not found.");
     }
 }

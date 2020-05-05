@@ -11,16 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.Definition;
-import pl.cekus.oneclickenglish.model.Example;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.DefinitionRepository;
 import pl.cekus.oneclickenglish.repository.WordRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class DefinitionService {
@@ -58,28 +54,10 @@ public class DefinitionService {
         }
     }
 
-    public List<String> getDefinitionsOfWord(String enWord) {
-        return definitionRepository
-                .findAllByWord(wordRepository.findWordByEnWord(enWord))
-                .stream()
-                .map(Definition::getDescription)
-                .collect(Collectors.toList());
-    }
-
     public String getDefinitionOfWord(Word word) throws Exception {
         List<Definition> definitions = definitionRepository.findAllByWord(word);
         Random random = new Random();
         return definitions.get(random.nextInt(definitions.size() -1) +1).getDescription();
-    }
-
-    public List<Boolean> checkExistsByDescAndWord (Map<String, String> mapToCheck) {
-        List<Boolean> booleans = new ArrayList<>();
-        Word word;
-        for (String key: mapToCheck.keySet()) {
-            word = wordRepository.findWordByEnWord(mapToCheck.get(key));
-            booleans.add(definitionRepository.existsByDescriptionAndWord(key, word));
-        }
-        return booleans;
     }
 
     public boolean checkExists(Word word) {

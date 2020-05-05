@@ -45,13 +45,4 @@ public class ExampleExamService {
         }
         return questions;
     }
-
-    public List<Boolean> checkExamplesExam(Map<String, String> examToCheck) {
-        List<Boolean> answers = new ArrayList<>();
-        for (String enWord : examToCheck.keySet()) {
-            answers.add(examToCheck.get(enWord)
-                    .contains(enWord));
-        }
-        return answers;
-    }
 }

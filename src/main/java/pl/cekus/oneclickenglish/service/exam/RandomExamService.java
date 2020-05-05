@@ -61,10 +61,4 @@ public class RandomExamService {
         }
         return questions;
     }
-
-    public List<Boolean> checkRandomExam(List<String> examToCheck) {
-        return examToCheck.stream()
-                .map(wordRepository::existsByEnWord)
-                .collect(Collectors.toList());
-    }
 }

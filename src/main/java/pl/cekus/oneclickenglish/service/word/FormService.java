@@ -1,13 +1,7 @@
 package pl.cekus.oneclickenglish.service.word;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import pl.cekus.oneclickenglish.model.Definition;
-import pl.cekus.oneclickenglish.model.Example;
 import pl.cekus.oneclickenglish.model.Form;
-import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.ExampleRepository;
 import pl.cekus.oneclickenglish.repository.FormRepository;
 import pl.cekus.oneclickenglish.repository.WordRepository;

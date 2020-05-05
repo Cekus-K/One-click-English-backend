@@ -9,7 +9,6 @@ import pl.cekus.oneclickenglish.service.exam.questions.ChoiceTestQuestion;
 import pl.cekus.oneclickenglish.service.exam.questions.WrittenTestQuestion;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin("*")
 @RestController
@@ -51,25 +50,5 @@ class ExamController {
     @GetMapping("/random")
     public List<ChoiceTestQuestion> generateRandomWordsExam() {
         return randomExamService.generateRandomWordsExam();
-    }
-
-    @PostMapping("/definitions")
-    public List<Boolean> checkDefinitionsExam(@RequestBody Map<String, String> examToCheck) {
-        return definitionExamService.checkDefinitionsExam(examToCheck);
-    }
-
-    @PostMapping("/examples")
-    public List<Boolean> checkExamplesExam(@RequestBody Map<String, String> examToCheck) {
-        return exampleExamService.checkExamplesExam(examToCheck);
-    }
-
-    @PostMapping("/forms")
-    public List<Boolean> checkSingleChoiceExam(@RequestBody List<String> examToCheck) {
-        return formExamService.checkSingleChoiceExam(examToCheck);
-    }
-
-    @PostMapping("/random")
-    public List<Boolean> checkRandomWordsExam(@RequestBody List<String> examToCheck) {
-        return randomExamService.checkRandomExam(examToCheck);
     }
 }

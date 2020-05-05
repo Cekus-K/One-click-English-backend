@@ -2,15 +2,12 @@ package pl.cekus.oneclickenglish.service.word;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import pl.cekus.oneclickenglish.model.User;
 import pl.cekus.oneclickenglish.model.Word;
 import pl.cekus.oneclickenglish.repository.WordRepository;
 import pl.cekus.oneclickenglish.service.user.UserService;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -45,7 +42,6 @@ public class WordService {
                 wordRepository.save(new Word(enWord, translateService.translate(enWord)));
             } catch (Exception e) {
                 logger.info("An error occurred while translating the word");
-                e.printStackTrace();
             }
         }
 
@@ -74,7 +70,6 @@ public class WordService {
 
     public List<Word> getAllUserWords() {
         return wordRepository.findAllByUserId(userService.getCurrentLoggedInUser().getId());
-//        return wordRepository.findAll();
     }
 
     public void deleteWord(String enWord) {
@@ -84,36 +79,36 @@ public class WordService {
         userService.save(user);
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void initSampleWordsToDb() {
-        wordRepository.save(new Word("service", "usługa"));
-        wordRepository.save(new Word("software", "oprogramowanie"));
-        wordRepository.save(new Word("interact", "oddziaływać"));
-        wordRepository.save(new Word("various", "różny"));
-        wordRepository.save(new Word("equipment", "wyposażenie"));
-        wordRepository.save(new Word("retrieved", "odzyskany"));
-        wordRepository.save(new Word("during", "podczas"));
-        wordRepository.save(new Word("evaluate", "oszacować"));
-        wordRepository.save(new Word("according", "według"));
-        wordRepository.save(new Word("contrived", "wymyślone"));
-        wordRepository.save(new Word("disadvantages", "niedogodności"));
-        wordRepository.save(new Word("adjust", "dostosować"));
-        wordRepository.save(new Word("mention", "wspominać"));
-        wordRepository.save(new Word("underlying", "zasadniczy"));
-        wordRepository.save(new Word("wondering", "zdumiewający"));
-        wordRepository.save(new Word("messy", "niechlujny"));
-        wordRepository.save(new Word("concise", "zwięzły"));
-        wordRepository.save(new Word("greedy", "chciwy"));
-        wordRepository.save(new Word("serves", "służyć"));
-        wordRepository.save(new Word("combination", "połączenie"));
-        wordRepository.save(new Word("appear", "zjawić się"));
-        wordRepository.save(new Word("implicit", "domniemany"));
-        wordRepository.save(new Word("appropriate", "właściwy"));
-        wordRepository.save(new Word("confusion", "zamieszanie"));
-        wordRepository.save(new Word("announcements", "ogłoszenia"));
-        wordRepository.save(new Word("scope", "zakres"));
-        wordRepository.save(new Word("indicate", "wskazać"));
-        wordRepository.save(new Word("relevant", "istotny"));
-        wordRepository.save(new Word("assigning", "przypisywanie"));
-    }
+//    @EventListener(ApplicationReadyEvent.class)
+//    public void initSampleWordsToDb() {
+//        wordRepository.save(new Word("service", "usługa"));
+//        wordRepository.save(new Word("software", "oprogramowanie"));
+//        wordRepository.save(new Word("interact", "oddziaływać"));
+//        wordRepository.save(new Word("various", "różny"));
+//        wordRepository.save(new Word("equipment", "wyposażenie"));
+//        wordRepository.save(new Word("retrieved", "odzyskany"));
+//        wordRepository.save(new Word("during", "podczas"));
+//        wordRepository.save(new Word("evaluate", "oszacować"));
+//        wordRepository.save(new Word("according", "według"));
+//        wordRepository.save(new Word("contrived", "wymyślone"));
+//        wordRepository.save(new Word("disadvantages", "niedogodności"));
+//        wordRepository.save(new Word("adjust", "dostosować"));
+//        wordRepository.save(new Word("mention", "wspominać"));
+//        wordRepository.save(new Word("underlying", "zasadniczy"));
+//        wordRepository.save(new Word("wondering", "zdumiewający"));
+//        wordRepository.save(new Word("messy", "niechlujny"));
+//        wordRepository.save(new Word("concise", "zwięzły"));
+//        wordRepository.save(new Word("greedy", "chciwy"));
+//        wordRepository.save(new Word("serves", "służyć"));
+//        wordRepository.save(new Word("combination", "połączenie"));
+//        wordRepository.save(new Word("appear", "zjawić się"));
+//        wordRepository.save(new Word("implicit", "domniemany"));
+//        wordRepository.save(new Word("appropriate", "właściwy"));
+//        wordRepository.save(new Word("confusion", "zamieszanie"));
+//        wordRepository.save(new Word("announcements", "ogłoszenia"));
+//        wordRepository.save(new Word("scope", "zakres"));
+//        wordRepository.save(new Word("indicate", "wskazać"));
+//        wordRepository.save(new Word("relevant", "istotny"));
+//        wordRepository.save(new Word("assigning", "przypisywanie"));
+//    }
 }

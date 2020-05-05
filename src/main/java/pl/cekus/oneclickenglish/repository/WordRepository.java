@@ -20,6 +20,4 @@ public interface WordRepository extends CrudRepository<Word, Long> {
     Optional<Word> findById(Long id);
 
     boolean existsById(Long id);
-
-    boolean existsByEnWord(String enWord);
 }

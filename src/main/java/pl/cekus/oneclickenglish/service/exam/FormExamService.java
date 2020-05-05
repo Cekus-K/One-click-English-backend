@@ -12,7 +12,6 @@ import pl.cekus.oneclickenglish.service.word.ExampleService;
 import pl.cekus.oneclickenglish.service.word.FormService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class FormExamService {
@@ -47,7 +46,7 @@ public class FormExamService {
                 wordForms = formService.getFormsOfWord(word.getEnWord());
                 wordForms.add(word.getEnWord());
                 Collections.shuffle(wordForms);
-                example = exampleService.getExampleSentence(word.getEnWord());
+                example = exampleService.getExampleSentence(word);
                 if (wordForms.size() == 4) {
                     questions.add(new ChoiceTestQuestion(example.replace(word.getEnWord(), "............."), word.getEnWord(), wordForms));
                 }
@@ -56,11 +55,5 @@ public class FormExamService {
             }
         }
         return questions;
-    }
-
-    public List<Boolean> checkSingleChoiceExam(List<String> examToCheck) {
-        return examToCheck.stream()
-                .map(wordRepository::existsByEnWord)
-                .collect(Collectors.toList());
     }
 }

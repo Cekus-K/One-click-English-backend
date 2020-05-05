@@ -16,7 +16,6 @@ import pl.cekus.oneclickenglish.repository.WordRepository;
 
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 public class ExampleService {
@@ -56,25 +55,10 @@ public class ExampleService {
         }
     }
 
-    public List<String> getExampleSentences(String enWord) {
-        return exampleRepository
-                .findAllByWord(wordRepository.findWordByEnWord(enWord))
-                .stream()
-                .map(Example::getSentence)
-                .collect(Collectors.toList());
-    }
-
     public String getExampleSentence(Word word) throws Exception {
         List<Example> examples = exampleRepository.findAllByWord(word);
         Random random = new Random();
         return examples.get(random.nextInt(examples.size() -1) +1).getSentence();
-    }
-
-    public String getExampleSentence(String word) throws Exception {
-        return exampleRepository
-                .findFirstByWord(wordRepository.findWordByEnWord(word))
-                .orElseThrow(Exception::new)
-                .getSentence();
     }
 
     public boolean checkExists(Word word) {

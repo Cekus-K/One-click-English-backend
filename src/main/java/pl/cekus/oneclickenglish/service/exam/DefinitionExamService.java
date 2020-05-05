@@ -38,15 +38,15 @@ public class DefinitionExamService {
             String definitionOfWord;
             try {
                 definitionOfWord = definitionService.getDefinitionOfWord(word);
-                questions.add(new WrittenTestQuestion(definitionOfWord, word));
+                if (definitionOfWord.contains(word.getEnWord())) {
+                    questions.add(new WrittenTestQuestion(definitionOfWord.replace(word.getEnWord(), "............."), word));
+                } else {
+                    questions.add(new WrittenTestQuestion(definitionOfWord, word));
+                }
             } catch (Exception e) {
                 logger.info("No definition found for the word: " + word.getEnWord());
             }
         }
         return questions;
-    }
-
-    public List<Boolean> checkDefinitionsExam(Map<String, String> examToCheck) {
-        return definitionService.checkExistsByDescAndWord(examToCheck);
     }
 }

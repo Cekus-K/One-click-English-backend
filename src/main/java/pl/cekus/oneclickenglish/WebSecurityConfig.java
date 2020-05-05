@@ -2,7 +2,6 @@ package pl.cekus.oneclickenglish;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -38,21 +37,11 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/user/register").permitAll()
-//                .antMatchers("/words").hasAnyAuthority("ADMIN", "USER")
-//                .antMatchers("/words/add").permitAll()
-//                .antMatchers("/test").hasAnyAuthority("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .permitAll()
-//                .defaultSuccessUrl("/words", true)
-//                .and()
                 .logout()
-//                .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
-//                .permitAll()
     }
 }
