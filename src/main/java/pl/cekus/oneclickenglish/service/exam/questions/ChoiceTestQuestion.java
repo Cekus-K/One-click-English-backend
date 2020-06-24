@@ -1,6 +1,7 @@
 package pl.cekus.oneclickenglish.service.exam.questions;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ChoiceTestQuestion {
     private String sentence;
@@ -23,5 +24,20 @@ public class ChoiceTestQuestion {
 
     public List<String> getForms() {
         return forms;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChoiceTestQuestion that = (ChoiceTestQuestion) o;
+        return Objects.equals(sentence, that.sentence) &&
+                Objects.equals(answer, that.answer) &&
+                Objects.equals(forms, that.forms);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(sentence, answer, forms);
     }
 }
