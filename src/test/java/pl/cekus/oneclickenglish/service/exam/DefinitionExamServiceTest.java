@@ -19,7 +19,6 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,8 +42,7 @@ class DefinitionExamServiceTest {
     @Mock
     private UserService userService;
 
-    @Mock
-    private User user;
+    private User user = new User();
 
     @InjectMocks
     private DefinitionExamService definitionExamService;
@@ -53,71 +51,65 @@ class DefinitionExamServiceTest {
     void shouldReplaceWordWithDotsWhenTheWordAppearsInTheDefinition() throws Exception {
         //given
         given(userService.getCurrentLoggedInUser()).willReturn(user);
+        given(wordRepository.findAllByUserId(user.getId())).willReturn(prepareUserWordsList());
+        given(definitionService.getDefinitionOfWord(word1))
+                .willReturn(prepareDefinitions().get(0).getDescription().replace(word1.getEnWord(), "............."));
+        given(definitionService.getDefinitionOfWord(word2))
+                .willReturn(prepareDefinitions().get(1).getDescription().replace(word2.getEnWord(), "............."));
+        given(definitionService.getDefinitionOfWord(word3))
+                .willReturn(prepareDefinitions().get(2).getDescription().replace(word3.getEnWord(), "............."));
 
         //when
-        when(wordRepository.findAllByUserId(user.getId())).thenReturn(prepareUserWordsList());
-        when(definitionService.getDefinitionOfWord(word1))
-                .thenReturn(prepareDefinitions().get(0).getDescription().replace(word1.getEnWord(), "............."));
-        when(definitionService.getDefinitionOfWord(word2))
-                .thenReturn(prepareDefinitions().get(1).getDescription().replace(word2.getEnWord(), "............."));
-        when(definitionService.getDefinitionOfWord(word3))
-                .thenReturn(prepareDefinitions().get(2).getDescription().replace(word3.getEnWord(), "............."));
+        List<WrittenTestQuestion> questions = definitionExamService.generateDefinitionsExam();
 
         //then
-        assertThat(definitionExamService.generateDefinitionsExam(), hasSize(3));
-        assertThat(definitionExamService.generateDefinitionsExam().get(0).getSentence(), not(containsString(".............")));
-        assertThat(definitionExamService.generateDefinitionsExam().get(0).getSentence(), not(containsString(word1.getEnWord())));
-        assertThat(definitionExamService.generateDefinitionsExam().get(1).getSentence(), not(containsString(word2.getEnWord())));
-        assertThat(definitionExamService.generateDefinitionsExam().get(2).getSentence(), containsString("............."));
-        assertThat(definitionExamService.generateDefinitionsExam().get(2).getSentence(), not(containsString(word3.getEnWord())));
+        assertThat(questions, hasSize(3));
+        assertThat(questions.get(0).getSentence(), not(containsString(".............")));
+        assertThat(questions.get(0).getSentence(), not(containsString(word1.getEnWord())));
+        assertThat(questions.get(1).getSentence(), not(containsString(word2.getEnWord())));
+        assertThat(questions.get(2).getSentence(), containsString("............."));
+        assertThat(questions.get(2).getSentence(), not(containsString(word3.getEnWord())));
     }
 
     @Test
     void shouldGenerateDefinitionsExamWhenWordsHaveDefinitions() throws Exception {
         //given
         given(userService.getCurrentLoggedInUser()).willReturn(user);
+        given(wordRepository.findAllByUserId(user.getId())).willReturn(prepareUserWordsList());
+        given(definitionService.getDefinitionOfWord(word1)).willReturn(definition1.getDescription());
+        given(definitionService.getDefinitionOfWord(word2)).willReturn(definition2.getDescription());
+        given(definitionService.getDefinitionOfWord(word3)).willReturn(definition3.getDescription());
 
         //when
-        when(wordRepository.findAllByUserId(user.getId())).thenReturn(prepareUserWordsList());
-        when(definitionService.getDefinitionOfWord(word1)).thenReturn(prepareDefinitions().get(0).getDescription());
-        when(definitionService.getDefinitionOfWord(word2)).thenReturn(prepareDefinitions().get(1).getDescription());
-        when(definitionService.getDefinitionOfWord(word3)).thenReturn(prepareDefinitions().get(2).getDescription());
+        List<WrittenTestQuestion> questions = definitionExamService.generateDefinitionsExam();
 
         //then
-        assertThat(definitionExamService.generateDefinitionsExam(), hasSize(3));
-        assertThat(definitionExamService.generateDefinitionsExam().get(1), equalTo(new WrittenTestQuestion(definition2.getDescription(), word2)));
-        assertThat(definitionExamService.generateDefinitionsExam().get(0).getSentence(), containsString("move very fast"));
+        assertThat(questions, hasSize(3));
+        assertThat(questions.get(1), equalTo(new WrittenTestQuestion(definition2.getDescription(), word2)));
+        assertThat(questions.get(0).getSentence(), containsString("move very fast"));
     }
 
     @Test
     void shouldNotGenerateWrittenTestQuestionForWordWithoutDefinition() throws Exception {
         //given
-        given(userService.getCurrentLoggedInUser()).willReturn(user);
         String definitionWord4 = definitionService.getDefinitionOfWord(word4);
-
+        given(userService.getCurrentLoggedInUser()).willReturn(user);
+        given(wordRepository.findAllByUserId(user.getId())).willReturn(prepareUserWordsList());
+        given(definitionService.getDefinitionOfWord(word1)).willReturn(prepareDefinitions().get(0).getDescription());
+        given(definitionService.getDefinitionOfWord(word2)).willReturn(prepareDefinitions().get(1).getDescription());
+        given(definitionService.getDefinitionOfWord(word3)).willReturn(prepareDefinitions().get(2).getDescription());
+        given(definitionService.getDefinitionOfWord(word4)).willReturn(definitionWord4);
 
         //when
-        when(wordRepository.findAllByUserId(user.getId())).thenReturn(prepareUserWordsList());
-        when(definitionService.getDefinitionOfWord(word1)).thenReturn(prepareDefinitions().get(0).getDescription());
-        when(definitionService.getDefinitionOfWord(word2)).thenReturn(prepareDefinitions().get(1).getDescription());
-        when(definitionService.getDefinitionOfWord(word3)).thenReturn(prepareDefinitions().get(2).getDescription());
-        when(definitionService.getDefinitionOfWord(word4)).thenReturn(definitionWord4);
+        List<WrittenTestQuestion> questions = definitionExamService.generateDefinitionsExam();
 
         //then
         assertThat(definitionWord4, nullValue());
-        assertThat(definitionExamService.generateDefinitionsExam(), hasSize(3));
-        assertThat(definitionExamService.generateDefinitionsExam().get(1), equalTo(new WrittenTestQuestion(definition2.getDescription(), word2)));
-        assertThat(definitionExamService.generateDefinitionsExam().get(0).getSentence(), containsString("move very fast"));
+        assertThat(questions, hasSize(3));
+        assertThat(questions, not(contains(word4)));
+        assertThat(questions.get(1), equalTo(new WrittenTestQuestion(definition2.getDescription(), word2)));
+        assertThat(questions.get(0).getSentence(), containsString("move very fast"));
     }
-
-//    @Test
-//    void shouldNotReturnDefinitionIfGetsADefinitionOfWordThatHasNoDefinition() throws Exception {
-//        //given
-//        String definition = definitionService.getDefinitionOfWord(word4);
-//
-//        //when + then
-//        assertThat(definition, nullValue());
-//    }
 
     private List<Word> prepareUserWordsList() {
         return Arrays.asList(word1, word2, word3, word4);

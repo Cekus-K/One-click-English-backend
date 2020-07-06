@@ -45,8 +45,7 @@ class ExampleExamServiceTest {
     @Mock
     private UserService userService;
 
-    @Mock
-    private User user;
+    private User user = new User();
 
     @InjectMocks
     private ExampleExamService exampleExamService;
@@ -55,61 +54,64 @@ class ExampleExamServiceTest {
     void shouldReplaceWordWithDotsInSentenceWhenDuringGeneratingExam() throws Exception {
         //given
         given(userService.getCurrentLoggedInUser()).willReturn(user);
+        given(wordRepository.findAllByUserId(user.getId())).willReturn(prepareUserWordsList());
+        given(exampleService.getExampleSentence(word1))
+                .willReturn(prepareExamples().get(0).getSentence().replace(word1.getEnWord(), "............."));
+        given(exampleService.getExampleSentence(word2))
+                .willReturn(prepareExamples().get(1).getSentence().replace(word2.getEnWord(), "............."));
+        given(exampleService.getExampleSentence(word3))
+                .willReturn(prepareExamples().get(2).getSentence().replace(word3.getEnWord(), "............."));
 
         //when
-        when(wordRepository.findAllByUserId(user.getId())).thenReturn(prepareUserWordsList());
-        when(exampleService.getExampleSentence(word1))
-                .thenReturn(prepareExamples().get(0).getSentence().replace(word1.getEnWord(), "............."));
-        when(exampleService.getExampleSentence(word2))
-                .thenReturn(prepareExamples().get(1).getSentence().replace(word2.getEnWord(), "............."));
-        when(exampleService.getExampleSentence(word3))
-                .thenReturn(prepareExamples().get(2).getSentence().replace(word3.getEnWord(), "............."));
+        List<WrittenTestQuestion> questions = exampleExamService.generateExamplesExam();
 
         //then
-        assertThat(exampleExamService.generateExamplesExam(), hasSize(3));
-        assertThat(exampleExamService.generateExamplesExam().get(0).getSentence(), containsString("............."));
-        assertThat(exampleExamService.generateExamplesExam().get(1).getSentence(), not(containsString(word2.getEnWord())));
+        assertThat(questions, hasSize(3));
+        assertThat(questions.get(0).getSentence(), containsString("............."));
+        assertThat(questions.get(1).getSentence(), not(containsString(word2.getEnWord())));
     }
 
     @Test
     void shouldGenerateExampleExamWhenWordsHaveExamples() throws Exception {
         //given
         given(userService.getCurrentLoggedInUser()).willReturn(user);
+        given(wordRepository.findAllByUserId(user.getId())).willReturn(prepareUserWordsList());
+        given(exampleService.getExampleSentence(word1)).willReturn(prepareExamples().get(0).getSentence());
+        given(exampleService.getExampleSentence(word2)).willReturn(prepareExamples().get(1).getSentence());
+        given(exampleService.getExampleSentence(word3)).willReturn(prepareExamples().get(2).getSentence());
 
         //when
-        when(wordRepository.findAllByUserId(user.getId())).thenReturn(prepareUserWordsList());
-        when(exampleService.getExampleSentence(word1)).thenReturn(prepareExamples().get(0).getSentence());
-        when(exampleService.getExampleSentence(word2)).thenReturn(prepareExamples().get(1).getSentence());
-        when(exampleService.getExampleSentence(word3)).thenReturn(prepareExamples().get(2).getSentence());
+        List<WrittenTestQuestion> questions = exampleExamService.generateExamplesExam();
 
         //then
-        assertThat(exampleExamService.generateExamplesExam(), hasSize(3));
-        assertThat(exampleExamService.generateExamplesExam().get(1),
+        assertThat(questions, hasSize(3));
+        assertThat(questions.get(1),
                 equalTo(new WrittenTestQuestion(example2.getSentence().replace(word2.getEnWord(), "............."), word2)));
-        assertThat(exampleExamService.generateExamplesExam().get(0).getSentence(),
+        assertThat(questions.get(0).getSentence(),
                 containsString("he shared his ............. with the others"));
     }
 
     @Test
     void shouldNotGenerateWrittenTestQuestionForWordWithoutExample() throws Exception {
         //given
-        given(userService.getCurrentLoggedInUser()).willReturn(user);
         String definitionWord4 = exampleService.getExampleSentence(word4);
-
+        given(userService.getCurrentLoggedInUser()).willReturn(user);
+        given(wordRepository.findAllByUserId(user.getId())).willReturn(prepareUserWordsList());
+        given(exampleService.getExampleSentence(word1)).willReturn(prepareExamples().get(0).getSentence());
+        given(exampleService.getExampleSentence(word2)).willReturn(prepareExamples().get(1).getSentence());
+        given(exampleService.getExampleSentence(word3)).willReturn(prepareExamples().get(2).getSentence());
+        given(exampleService.getExampleSentence(word4)).willReturn(definitionWord4);
 
         //when
-        when(wordRepository.findAllByUserId(user.getId())).thenReturn(prepareUserWordsList());
-        when(exampleService.getExampleSentence(word1)).thenReturn(prepareExamples().get(0).getSentence());
-        when(exampleService.getExampleSentence(word2)).thenReturn(prepareExamples().get(1).getSentence());
-        when(exampleService.getExampleSentence(word3)).thenReturn(prepareExamples().get(2).getSentence());
-        when(exampleService.getExampleSentence(word4)).thenReturn(definitionWord4);
+        List<WrittenTestQuestion> questions = exampleExamService.generateExamplesExam();
 
         //then
         assertThat(definitionWord4, nullValue());
-        assertThat(exampleExamService.generateExamplesExam(), hasSize(3));
-        assertThat(exampleExamService.generateExamplesExam().get(1),
+        assertThat(questions, not(contains(word4)));
+        assertThat(questions, hasSize(3));
+        assertThat(questions.get(1),
                 equalTo(new WrittenTestQuestion(example2.getSentence().replace(word2.getEnWord(), "............."), word2)));
-        assertThat(exampleExamService.generateExamplesExam().get(0).getSentence(),
+        assertThat(questions.get(0).getSentence(),
                 containsString("he shared his ............. with the others"));
     }
 
